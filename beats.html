@@ -197,6 +197,15 @@ input,select,button{font-family:var(--ui)}
 .exp-bar{height:100%;background:var(--green);border-radius:2px;width:0%;transition:width .4s}
 .toast{position:fixed;bottom:36px;left:50%;transform:translateX(-50%) translateY(8px);background:rgba(28,28,30,.96);border:1px solid var(--border2);color:var(--txt);padding:7px 16px;border-radius:8px;font-size:11px;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:999;white-space:nowrap}
 .toast.sh{opacity:1;transform:translateX(-50%) translateY(0)}
+
+- { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  button, .gpill, .gpill, .abtn, .hbg, .lctab, .lg-pill, .add-trk,
+  .snd-item, .snd-add, .snd-play, .cell, .modal-item, .star,
+  .sec-chip, .sec-add, .trk-card, .tc-btn, .mem-item, .mtab,
+  .exp-btn, .modal-close, .pop-pill, .pop-close, .schip-lk,
+  .schip-del, .sec-lk-btn, .sec-del, .mimic-go, .mimic-drop,
+  label { cursor: pointer; touch-action: manipulation; }
+
 </style>
 </head>
 <body><div id="_err" style="display:none;position:fixed;top:0;left:0;right:0;background:#ff453a;color:#fff;font-size:11px;padding:8px 12px;z-index:9999;font-family:monospace"></div>
@@ -1455,7 +1464,7 @@ if(e.code===‘Escape’){stopAll();closeLib();closeModal(‘addModal’);closeM
 }
 
 // ── Init ──
-document.addEventListener(‘DOMContentLoaded’, function() {
+(function() {
 initEvents();
 renderLibImport();
 renderLib();
@@ -1464,8 +1473,17 @@ renderTrkList();
 renderGrid();
 renderMem();
 updateGenInfo();
+
+// iOS touch fix - fire click on touchend to bypass 300ms delay and ghost click issues
+document.addEventListener(‘touchend’, function(e) {
+var el = e.target.closest(‘button, .gpill, .abtn, .hbg, .lctab, .lg-pill, .add-trk, .snd-add, .cell, .modal-item, .star, .sec-chip, .sec-add, .tc-btn, .mem-item, .mtab, .exp-btn, .modal-close, .pop-pill, .pop-close, .mimic-go, .mimic-drop’);
+if (el) {
+e.preventDefault();
+el.click();
+}
+}, {passive: false});
 toast(‘Open library, import sounds, add tracks, then Generate!’);
-});
+})();
 
 })();
 </script>
